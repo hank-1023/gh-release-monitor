@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { PageHeader, Col, Row, Button } from 'antd';
 import SubscriptionList from './SubscriptionList/SubscriptionList';
+import { octokit } from './Octokit';
 import 'antd/dist/antd.css';
 import './App.css';
 
 const App = () => {
   const [repos, setRepos] = useState({});
+  const [refreshLoading, setRefreshLoading] = useState(false);
 
   useEffect(() => {
     const storedStr = localStorage.getItem("repos");
@@ -35,17 +37,51 @@ const App = () => {
     setRepos(newRepo);
   };
 
+  const onDismissNew = (id) => {
+    const newRepo = { ...repos };
+    newRepo[id].isNew = false;
+    setRepos(newRepo);
+  };
+
+  const refresh = () => {
+    setRefreshLoading(true);
+    const newRepos = {};
+    try {
+      Object.values(repos).forEach(async (repo, i) => {
+        const val = await octokit.repos.getLatestRelease({
+          owner: repo.owner,
+          repo: repo.name
+        });
+        console.log("Latest Release", val);
+        if (val.data.published_at !== repo.date) {
+          console.log("Found new version: ", val.data.tag_name);
+          const result = { ...repo };
+          result.version = val.data.tag_name;
+          result.date = val.data.published_at;
+          result.isNew = true;
+          newRepos[repo.id] = result;
+        } else {
+          newRepos[repo.id] = repo;
+        }
+        if (i === Object.values(repos).length - 1) {
+          setRepos(newRepos);
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setRefreshLoading(false);
+    }
+  };
+
   return (
     <div>
       <PageHeader
         ghost={false}
         title="GitHub Release Monitor"
         extra={[
-          <Button key="3">Operation</Button>,
-          <Button key="2">Operation</Button>,
-          <Button key="1" type="primary">
-            Primary
-          </Button>,
+          <Button key="clear">Clear Local Storage</Button>,
+          <Button key="refresh" type="primary" onClick={refresh} loading={refreshLoading}>Refresh</Button>,
         ]}
       />
       <Row id="content-container">
@@ -54,6 +90,7 @@ const App = () => {
             repos={repos}
             onAdd={onAdd}
             onDelete={onDelete}
+            onDismissNew={onDismissNew}
           />
         </Col>
         <Col xs={0} md={16}>
