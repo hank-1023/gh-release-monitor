@@ -58,7 +58,8 @@ const SearchDropdown = ({ onAdd }) => {
         console.log("Latest Release", val);
         result.version = val.data.tag_name;
         result.date = val.data.published_at;
-        result.isNew = false;
+        result.releaseNotes = val.data.body;
+        result.hasNewVersion = false;
         setData([]);
         setSelected(null);
         onAdd(result);
