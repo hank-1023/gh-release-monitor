@@ -1,29 +1,39 @@
-import { Card } from "antd";
+import { useMemo } from 'react';
+import { Card, Typography } from "antd";
 
 const { Meta } = Card;
+const { Text } = Typography;
 
-const SubscriptionCard = ({ id, title, version, isNew, onDelete, onDismissNew }) => {
+const SubscriptionCard = ({ repo, onDelete, onDismissNew, onSelect, selected }) => {
 
-  const dismissNew = () => {
-    if (isNew) {
-      onDismissNew(id);
+  const onCardClick = () => {
+    if (repo.hasNewVersion) {
+      onDismissNew(repo.id);
     }
+    onSelect(repo.id);
   };
 
+  const dateDescription = useMemo(() => {
+    const dateObj = new Date(repo.date);
+    return dateObj.toDateString();
+  }, [repo.date]);
+
   return (
-    <div className={isNew ? "new-card" : null}>
-      <Card className="subscription-card" style={{ margin: "0 10px 20px 10px" }} onClick={dismissNew}>
-        <Meta
-          title={title}
-          description={version}
-        />
-        <button
-          className="delete-button"
-          onClick={() => onDelete(id)}
-        >
-          X
-      </button>
-      </Card>
+    <div
+      className={`subscription-card${repo.hasNewVersion ? " new-card" : ""}${selected ? " selected-card" : ""}`}
+      onClick={onCardClick}
+    >
+      <Meta
+        title={repo.name}
+        description={repo.version}
+      />
+      <Text
+        type="secondary"
+        style={{ display: "block", marginTop: "12px" }}
+      >
+        {`Lastest release: ${dateDescription}`}
+      </Text>
+      <button className="delete-button" onClick={() => onDelete(repo.id)}>X</button>
     </div>
 
   );

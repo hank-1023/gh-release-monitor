@@ -2,7 +2,7 @@ import SearchDropdown from './components/SearchDropdown';
 import SubscriptionCard from './components/SubscriptionCard';
 import './SubscriptionList.css';
 
-const SubscriptionList = ({ repos, onAdd, onDelete, onDismissNew }) => {
+const SubscriptionList = ({ repos, onAdd, onDelete, onDismissNew, onSelect, selectedID }) => {
   return (
     <div className="subscription-list">
       <SearchDropdown onAdd={onAdd} />
@@ -13,11 +13,11 @@ const SubscriptionList = ({ repos, onAdd, onDelete, onDismissNew }) => {
             .map((repo) => (
               <SubscriptionCard
                 key={repo.id}
-                id={repo.id}
-                title={repo.name}
-                version={repo.version}
+                repo={repo}
+                selected={selectedID === repo.id}
                 onDelete={onDelete}
                 onDismissNew={onDismissNew}
+                onSelect={onSelect}
               />
             ))
         }
