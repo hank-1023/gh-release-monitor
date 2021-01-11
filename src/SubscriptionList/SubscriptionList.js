@@ -2,25 +2,25 @@ import SearchDropdown from './components/SearchDropdown';
 import SubscriptionCard from './components/SubscriptionCard';
 import './SubscriptionList.css';
 
-const SubscriptionList = () => {
+const SubscriptionList = ({ repos, onAdd, onDelete, onDismissNew }) => {
   return (
     <div className="subscription-list">
-      <div className="search-bar">
-        <SearchDropdown />
-      </div>
+      <SearchDropdown onAdd={onAdd} />
       <div className="subscription-scroll-view">
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
-        <SubscriptionCard title="VSCode" version="1.0" />
+        {
+          Object.values(repos)
+            .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+            .map((repo) => (
+              <SubscriptionCard
+                key={repo.id}
+                id={repo.id}
+                title={repo.name}
+                version={repo.version}
+                onDelete={onDelete}
+                onDismissNew={onDismissNew}
+              />
+            ))
+        }
       </div>
     </div>
 

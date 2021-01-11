@@ -20,12 +20,18 @@
     overflow-y: scroll;
 }
 
-.close-button {
+.delete-button {
     position: absolute;
-    right: 4px;
-    top: 4px;
+    right: 6px;
+    top: 6px;
+    border: none;
+    background: none;
 }
 
 .ant-select {
     width: 80%;
+}
+
+.error-text {
+    color: red;
 }
