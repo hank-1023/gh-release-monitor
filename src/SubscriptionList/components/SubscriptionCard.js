@@ -2,7 +2,8 @@ import { Card } from "antd";
 
 const { Meta } = Card;
 
-const SubscriptionCard = ({ title, version, isNew, onDelete }) => {
+const SubscriptionCard = ({ id, title, version, isNew, onDelete }) => {
+
   return (
     <Card className="subscription-card" style={{ margin: "0 10px 20px 10px" }}>
       <Meta
@@ -11,7 +12,7 @@ const SubscriptionCard = ({ title, version, isNew, onDelete }) => {
       />
       <button
         className="close-button"
-        onClick={onDelete}
+        onClick={() => onDelete(id)}
       >
         X
       </button>
