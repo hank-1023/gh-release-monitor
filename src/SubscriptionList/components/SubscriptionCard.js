@@ -19,7 +19,10 @@ const SubscriptionCard = ({ repo, onDelete, onDismissNew, onSelect, selected }) 
   }, [repo.date]);
 
   return (
-    <div className={`subscription-card${repo.hasNewVersion ? " new-card" : ""}${selected ? " selected-card" : ""}`} onClick={onCardClick}>
+    <div
+      className={`subscription-card${repo.hasNewVersion ? " new-card" : ""}${selected ? " selected-card" : ""}`}
+      onClick={onCardClick}
+    >
       <Meta
         title={repo.name}
         description={repo.version}
